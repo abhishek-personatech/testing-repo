@@ -8,7 +8,7 @@ name: Test Coverage
 
 on:
   pull_request:
-    types: [opened, reopened]
+    types: [opened, reopened, updated]
 
 permissions:
   contents: read
@@ -33,20 +33,16 @@ jobs:
         run: npm install
 
       - name: Run tests with coverage
-        run: npm run test:coverage
+        run: npm run test:coverage --coverageReporters=text-summary
 
-      - name: Upload coverage results
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-report
-          path: ./coverage
-      - name: Comment coverage on PR
-        uses: marocchino/sticky-pull-request-comment@v2
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          header: Test Coverage
-          message: |
-            Jest Test Coverage: 
-            ```
-            $(cat ./coverage/lcov-report/index.html | grep -E 'All files.*%' | tail -1)
+      - name: Parse coverage and create summary
+        run: |
+          COVERAGE=$(npm test -- --coverage --coverageReporters=text-summary | tail -20)  # Parse last lines for summary
+          echo "$COVERAGE"
+
+          # Create a GitHub Action summary
+          echo "#### Jest Test Coverage Report" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "$COVERAGE" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
             ```
