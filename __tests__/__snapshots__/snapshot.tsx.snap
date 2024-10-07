@@ -16,6 +16,9 @@ exports[`renders homepage unchanged 1`] = `
           Next.js!
         </a>
       </h1>
+      <div>
+        updated code
+      </div>
       <p
         class="description"
       >
