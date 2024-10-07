@@ -37,15 +37,17 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run tests with coverage
-        id: coverage
+       - name: Run tests with coverage
+        id: coverage  # Assign an ID to this step so we can reference the output later
         run: |
           npm run test:coverage -- --coverageReporters=text-summary > coverage.txt
           tail -n 20 coverage.txt  # Output the last few lines to get the coverage summary
 
-      - name: Checkout
+      - name: Checkout repository (for pushing comment)
         uses: actions/checkout@v4
-      - uses: actions/github-script@v6
+
+      - name: Post coverage comment
+        uses: actions/github-script@v6
         with:
           script: |
             const fs = require('fs');
