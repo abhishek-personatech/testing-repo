@@ -1,24 +1,29 @@
-name: Run Tests
+name: NodeJS with Webpack
 
 on:
+  push:
+    branches: [ "main" ]
   pull_request:
-    branches:
-      - main
+    branches: [ "main" ]
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 22.x]
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3 # Updated to v3
+    - uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3 # Using v3, the latest version
-        with:
-          node-version: "16"
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
 
-      - name: Install dependencies
-        run: npm install
+   - name: Install dependencies
+     run: npm install
 
       - name: Run tests with coverage
         run: npm test -- --coverage
