@@ -1,35 +1,52 @@
-name: NodeJS with Webpack
+# Workflow name
+name: Test Coverage
+# on:
+#   # Event for the workflow to run on
+#   push:
+#     branches:
+#       - "main" # Replace with the branch you want to deploy from
 
 on:
-  push:
-    branches: [ "main" ]
   pull_request:
-    branches: [ "main" ]
+    types: [opened, reopened]
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# List of jobs
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [18.x, 20.x, 22.x]
-
+    # Job steps
     steps:
-    - uses: actions/checkout@v4
+      # Manual Checkout
+      - uses: actions/checkout@v4
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
+      # Set up Node
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
 
-   - name: Install dependencies
-     run: npm install
+      - name: Install dependencies
+        run: npm install
 
       - name: Run tests with coverage
-        run: npm test -- --coverage
+        run: npm run test:coverage
 
       - name: Upload coverage results
-        uses: actions/upload-artifact@v3 # Ensure it's v3
+        uses: actions/upload-artifact@v4
         with:
           name: coverage-report
           path: ./coverage
+      - name: Comment coverage on PR
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          header: Test Coverage
+          message: |
+            Jest Test Coverage: 
+            ```
+            $(cat ./coverage/lcov-report/index.html | grep -E 'All files.*%' | tail -1)
+            ```
