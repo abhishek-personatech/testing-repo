@@ -37,21 +37,20 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run tests with coverage
-        id: coverage # Assign an ID to this step so we can reference the output later
+      - name: Run tests with coverage and capture output
+        id: coverage
         run: |
-          npm run test:coverage -- --coverageReporters=text-summary > coverage.txt
-          tail -n 20 coverage.txt  # Output the last few lines to get the coverage summary
-
-      - name: Checkout repository (for pushing comment)
-        uses: actions/checkout@v4
+          COVERAGE=$(npm run test:coverage -- --coverageReporters=text-summary)
+          echo "$COVERAGE" > coverage.txt  # Save to file to read later
+          echo "coverage_output<<EOF" >> $GITHUB_ENV
+          echo "$COVERAGE" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
       - name: Post coverage comment
         uses: actions/github-script@v6
         with:
           script: |
-            const fs = require('fs');
-            const coverage = fs.readFileSync('coverage.txt', 'utf8');
+            const coverage = process.env.coverage_output;
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
