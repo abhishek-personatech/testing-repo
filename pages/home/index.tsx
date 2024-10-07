@@ -14,6 +14,7 @@ export default function Home() {
         <h1 className={styles.title}>
           Welcome to <a href="https://nextjs.org">Next.js!</a>
         </h1>
+        <div>updated code</div>
 
         <p className={styles.description}>
           Get started by editing <code>pages/index.js</code>
@@ -32,8 +33,7 @@ export default function Home() {
 
           <a
             href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
+            className={styles.card}>
             <h3>Examples &rarr;</h3>
             <p>Discover and deploy boilerplate example Next.js projects.</p>
           </a>
@@ -51,8 +51,7 @@ export default function Home() {
         <a
           href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
           target="_blank"
-          rel="noopener noreferrer"
-        >
+          rel="noopener noreferrer">
           Powered by{" "}
           <span className={styles.logo}>
             <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
