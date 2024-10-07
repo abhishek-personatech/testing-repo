@@ -17,7 +17,7 @@ permissions:
 
 # List of jobs
 jobs:
-  deploy:
+  tests:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -37,8 +37,8 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-       - name: Run tests with coverage
-        id: coverage  # Assign an ID to this step so we can reference the output later
+      - name: Run tests with coverage
+        id: coverage # Assign an ID to this step so we can reference the output later
         run: |
           npm run test:coverage -- --coverageReporters=text-summary > coverage.txt
           tail -n 20 coverage.txt  # Output the last few lines to get the coverage summary
