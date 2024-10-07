@@ -10,10 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3 # Updated to v3
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v3 # Using v3, the latest version
         with:
           node-version: "16"
 
@@ -24,7 +24,7 @@ jobs:
         run: npm test -- --coverage
 
       - name: Upload coverage results
-        uses: actions/upload-artifact@v3 # Updated to v3
+        uses: actions/upload-artifact@v3 # Ensure it's v3
         with:
           name: coverage-report
           path: ./coverage
