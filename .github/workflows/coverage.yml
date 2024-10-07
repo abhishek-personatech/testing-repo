@@ -1,10 +1,14 @@
 # Workflow name
 name: Test Coverage
+# on:
+#   # Event for the workflow to run on
+#   push:
+#     branches:
+#       - "main" # Replace with the branch you want to deploy from
+
 on:
-  # Event for the workflow to run on
-  push:
-    branches:
-      - "main" # Replace with the branch you want to deploy from
+  pull_request:
+    types: [opened, reopened]
 
 permissions:
   contents: read
@@ -36,3 +40,13 @@ jobs:
         with:
           name: coverage-report
           path: ./coverage
+      - name: Comment coverage on PR
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          header: Test Coverage
+          message: |
+            Jest Test Coverage: 
+            ```
+            $(cat ./coverage/lcov-report/index.html | grep -E 'All files.*%' | tail -1)
+            ```
